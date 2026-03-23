@@ -1,151 +1,58 @@
-# Model-Aware and Data-Driven Inference
+# Optimal Linear Baseline Models for Scientific Machine Learning
+
+This repository accompanies the public arXiv manuscript [*Optimal Linear Baseline Models for Scientific Machine Learning*](https://arxiv.org/abs/2508.05831). The project was developed during the Summer 2025 Model Meets Data REU in Emory University's Math Department.
 
 Contributors: [Alexander DeLise](https://www.linkedin.com/in/alexanderdelise/), [Kyle Loh](https://www.linkedin.com/in/kyle-loh-a2a3272a9/), [Krish Patel](https://www.linkedin.com/in/krish-patel-1a8804224/), [Meredith Teague](https://www.linkedin.com/in/meredithcteague/)
 
 Advisors: Andrea Arnold, Matthias Chung
 
-This repository was made for the "Model-Aware and Data-Driven Inference" project from the Summer 2025 "Model Meets Data REU" in Emory University's Math Department. More information can be found on the [REU website](https://www.math.emory.edu/site/cmds-reuret/summer2025/).
+More about our project and the REU site:
+- [Poster](https://drive.google.com/file/d/17J9OuRvrml7EGSp-HRn8MIwqGx3h9dij/view?usp=sharing)
+- REU program page: <https://www.math.emory.edu/site/cmds-reuret/summer2025/>
 
-- Our ArXiV manuscript "Optimal Linear Baseline Models for Scientific Machine Learning" can be found [here](https://example.com).
-
-- Our poster can be found [here](https://drive.google.com/file/d/17J9OuRvrml7EGSp-HRn8MIwqGx3h9dij/view?usp=sharing).
-
-
-
-
-
-This project is supported by NSF DMS-2349534. 
+This project is supported by NSF DMS-2349534.
 
 # Instructions
+
 ## Basic Demo
-The `demo.py` script provides code to compute the theoretically optimal mappings for the forward and inverse end-to-end problems, as well as for autoencoding and denoising. It generates a random input data matrix $\mathbf{X}$ and constructs the corresponding observation matrix $\mathbf{Y}$ using a rank-deficient forward operator. 
 
-To generate affine linear mappings instead, set `affine = True`.
+The `demo.py` script provides a small synthetic example for the theoretically optimal forward, inverse, autoencoding, and denoising maps from `methods.py`.
 
+To run it:
 
-## Biomedical Imaging with $\texttt{MedMNIST}$ Experiment
-To get started, install the $\texttt{MedMNIST}$ dataset package by running:
-```python
-pip install medmnist
+```bash
+python demo.py
 ```
-More details about the $\texttt{MedMNIST}$ dataset can be found on the [official website](https://medmnist.com/). 
 
-We provide separate `Python` notebooks for the following problem formulations:
-- General forward and inverse end-to-end mappings
-- Autoencoding
-- Data denoising
-- Each of the above, along with their affine linear counterparts
+To generate affine-linear mappings instead, set `affine = True` inside `demo.py`.
 
-Each notebook will generate:
-- A representative error comparison sample
-- A rank sweep plot
+## Biomedical Imaging
 
-For example:
+The imaging experiments are split into two folders:
 
-<div align="center"> 
-    <img src="README-Pics/classic_chestmnist_mapping7181_errorcomparison.png" alt="errorSample" width="450"/> 
-</div> 
-<div align="center"> 
-    <img src="README-Pics/classic_ranksweep_200ep.png" alt="rankSweep" width="450"/> 
-</div>
+- [`MedMNIST/README.md`](MedMNIST/README.md) for the linear and affine-linear MedMNIST notebooks
+- [`NonlinearMedMNIST/README.md`](NonlinearMedMNIST/README.md) for the nonlinear median-blur experiments
 
-We use `PyTorch` to run all experiments. If you have an NVIDIA GPU, computations will automatically utilize it for acceleration. The results, including pickle files of learned and optimal mappings at various ranks, are stored in organized subdirectories.
-
-In the `SpecialErrorComparisonPlot` folder, we include scripts to generate side-by-side comparison plots for each problem type, with their affine linear variants. For example:
-
-<div align="center"> <img src="README-Pics/aeFullComparison.png" alt="errorSampleLinAffLin" width="600"/> </div>
-
+Both imaging folders contain notebook-level instructions, output locations, and example figures.
 
 ## Financial Experiment
 
-The `Financial` folder contains code for two case studies: `Synthetic` and `Market`. Each study includes a full pipeline for data generation, model training, and analysis.
+All finance experiments are documented in [`Financial/README.md`](Financial/README.md).
 
-### Synthetic
+That guide covers:
 
-This case study uses generated data from a GARCH model to test the full autoencoder pipeline.
-
-- `toyDataGARCH.ipynb`  
-  **Must be run first** – generates the CSV files required by the rest of the synthetic pipeline:
-  - `latentFactors_garch.csv`: latent factor matrix
-  - `assetReturns_garch.csv`: asset returns
-  - `factorLoadings_garch.csv`: factor loading matrix
-
-- `syntheticAEScript.ipynb`  
-  Full synthetic pipeline. After generating the CSVs above, this notebook runs end-to-end:
-  - Builds and trains the model
-  - Computes the Orthogonal Procrustes Alignment (OPA)
-  - Performs post-training analysis
-
-
-
-### Market
-
-This case study uses real market data. To get started, install the `yfinance` package via the command 
-```python
-pip install yfinance
-```
-
-- `stockUniverseNames.ipynb`  
-  Generates `stockUniverseNames.csv`, listing all stocks in the universe with GICS sector and full name.  
-  _Note: Not required to run the main pipeline._
-
-- `marketAEScript.ipynb`  
-  Complete pipeline for real stock data:
-  - Builds the stock universe
-  - Downloads Fama-French factors
-  - Builds, trains, and tests the model
-  - Applies varimax rotation and performs analysis  
-  _Note: The Kenneth French dataset source may change format or links over time. Manual updates to the code may be needed._
-
-
-### Visualizations
-
-**Also requires `yfinance` and other dependencies.**
-
-- `plotter.ipynb`  
-  Generates visualizations for both `Synthetic` and `Market` case studies:
-  1. Compare 4 synthetic vs 4 real asset returns over 100 days  
-  2. Plot latent factor values over 100 days  
-  3. (**Requires prior construction of stock framework**) Visualize GICS sector breakdown of selected stocks
-  4. Example figures include:
-<div align="center">
-  <img src="README-Pics/synthVSMarket.png" alt="Synthetic vs Market Comparison" width="450"/>
-</div>
-
-<div align="center">
-    <img src="README-Pics/latent.png" alt="Latent Factors" width="450"/>
-</div>
-
- 
-
+- the synthetic GARCH pipeline
+- the real-market pipeline
+- the optional stock-universe notebook
+- the plotting notebook and the figures it creates
 
 ## Shallow Water Equations Experiment
 
-All code for the shallow water experiments is contained in the `SWE` folder. It includes tools for generating datasets, computing optimal linear models, and training and evaluating nonlinear models using `PyTorch`. All computations will run on GPU if available.
+All shallow water instructions are in [`SWE/README.md`](SWE/README.md).
 
-* `createSWE.py`  
-  Used to generate the different training and testing datasets for our shallow water experiments.  
-  - Can be run as a standalone script  
-  - Requires `torch` and `numpy`  
-  - Saves the data and initial conditions into two separate `.pt` files for each type of initial condition  
-  - Parameters for data generation (e.g., noise level, resolution, condition type) can be varied
-  - Detailed descriptions of all functions are provided in-file
+That guide covers:
 
-* `finalSW.ipynb`  
-  Main notebook for the **nonlinear learned approach**.  
-  - Defines the model architecture  
-  - Includes the training loop, error computation, and result plotting
-
-* `linear.ipynb`  
-  Notebook for the **optimal linear approach**.  
-  - Computes the theoretically optimal linear model  
-  - Evaluates error and plots results
-
-* Notebooks create plots of the initial conditions and predicted results. For example:
-<div align="center">
-  <img src="README-Pics/ic.png" alt="Initial Condition" width="450"/>
-</div>
-
-<div align="center">
-  <img src="README-Pics/linPred.png" alt="Linear Prediction" width="450"/>
-</div>
+- the data-generation script
+- the nonlinear learned model notebook
+- the optimal linear baseline notebook
+- the order to run them and the files each step creates

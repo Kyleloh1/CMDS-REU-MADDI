@@ -597,7 +597,7 @@ for ic_name in ic_list:
         ic_allBatches[batch-1, 2, :, :] =  v_ic_torch
 
         # Save the tensors for the current batch to files
-    os.makedirs("new_data", exist_ok=True)
+    os.makedirs("data", exist_ok=True)
     #print(ic_name)
     torch.save(x_allBatches, f"data/train_x1_{ic_name}_allBatch_Close.pt")
     torch.save(ic_allBatches, f"data/train_ic_{ic_name}_allBatch.pt")
